@@ -12,6 +12,7 @@ using FluentValidation;
 using PurchaseOrder.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Serilog.Events;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,7 +65,18 @@ builder.Services.AddControllers().AddFluentValidation(options =>
                  });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.IncludeXmlComments(string.Format(@"{0}\PurchaseOrder.API.xml", System.AppDomain.CurrentDomain.BaseDirectory));
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Books & Video Shop API",
+    });
+
+});
 
 var app = builder.Build();
 app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
